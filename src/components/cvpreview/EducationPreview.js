@@ -1,24 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
 import SectionTitle from "./SectionTitle";
 import EducationItemPreview from "./EducationItemPreview";
 
-class EducationPreview extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="education-container">
-        <SectionTitle name="Education" />
-        <div className="preview-items">
-          {this.props.educationItems.map(function (item) {
-            return <EducationItemPreview content={item.content} />;
-          })}
-        </div>
+const EducationPreview = ({ educationItems }) => {
+  return (
+    <div className="education-container">
+      <SectionTitle name="Education" />
+      <div className="preview-items">
+        {educationItems.map(function (item) {
+          return (
+            <EducationItemPreview
+              key={item.id}
+              id={item.id}
+              content={item.content}
+            />
+          );
+        })}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default EducationPreview;

@@ -1,24 +1,20 @@
-import React, { Component } from "react";
+import React from "react";
 import EducationPreview from "./EducationPreview";
 import ExperiencePreview from "./ExperiencePreview";
 import DescriptionPreview from "./Description Preview";
 
-class LeftSection extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="left-section">
-        <DescriptionPreview
-          personalInformations={this.props.personalInformations}
-        />
-        <ExperiencePreview experienceItems={this.props.experienceItems} />
-        <EducationPreview educationItems={this.props.educationItems} />
-      </div>
-    );
-  }
-}
+const LeftSection = ({
+  personalInformations,
+  experienceItems,
+  educationItems,
+}) => {
+  return (
+    <div className="left-section">
+      <DescriptionPreview personalInformations={personalInformations} />
+      <ExperiencePreview experienceItems={experienceItems} />
+      <EducationPreview educationItems={educationItems} />
+    </div>
+  );
+};
 
 export default LeftSection;

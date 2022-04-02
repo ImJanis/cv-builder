@@ -1,25 +1,157 @@
-import React, { Component } from "react";
+import React from "react";
+import { useState } from "react";
 import CvForm from "./cvform/CvForm.js";
 import CvPreview from "./cvpreview/CvPreview.js";
 import uuidv4 from "../utils/uuid";
 
-class Main extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      personalInformations: {
-        firstName: "",
-        lastName: "",
-        title: "",
-        adress: "",
-        phoneNumber: "",
-        email: "",
-        description: "",
+const emptyCv = {
+  personalInformations: {
+    firstName: "",
+    lastName: "",
+    title: "",
+    adress: "",
+    phoneNumber: "",
+    email: "",
+    description: "",
+  },
+  educationItems: [
+    {
+      id: "emptyId1",
+      content: {
+        universityName: "",
+        city: "",
+        degree: "",
+        subject: "",
+        from: "",
+        to: "",
       },
+    },
+  ],
+  experienceItems: [
+    {
+      id: "emptyId2",
+      content: {
+        position: "",
+        company: "",
+        city: "",
+        from: "",
+        to: "",
+      },
+    },
+  ],
+};
+
+const exampleCV = {
+  personalInformations: {
+    firstName: "John",
+    lastName: "Doe",
+    title: "Web Developer",
+    adress: "123 Main St",
+    phoneNumber: "123-456-7890",
+    email: "john.doe@gmail.com",
+  },
+  educationItems: [
+    {
+      id: uuidv4(),
+      content: {
+        universityName: "University of California, Berkeley",
+        city: "Berkeley",
+        degree: "Bachelor of Science",
+        subject: "Computer Science",
+        from: "September, 2018",
+        to: "May, 2020",
+      },
+    },
+    {
+      id: uuidv4(),
+      content: {
+        universityName: "University of California, Berkeley",
+        city: "Berkeley",
+        degree: "Bachelor of Science",
+        subject: "Computer Science",
+        from: "September, 2018",
+        to: "May, 2020",
+      },
+    },
+  ],
+  experienceItems: [
+    {
+      id: uuidv4(),
+      content: {
+        position: "Software Engineer",
+        company: "Google",
+        city: "Mountain View",
+        from: "September, 2018",
+        to: "May, 2020",
+      },
+    },
+    {
+      id: uuidv4(),
+      content: {
+        position: "Software Engineer",
+        company: "Facebook",
+        city: "Mountain View",
+        from: "September, 2018",
+        to: "May, 2020",
+      },
+    },
+  ],
+};
+
+const Main = () => {
+  const [cv, setCv] = useState(emptyCv);
+
+  const handleChangeEducation = (event, id) => {
+    let items = [...cv.educationItems];
+    let queryItem = items.find((element) => element.id == id);
+    let inputFieldName = event.target.name;
+
+    queryItem.content[inputFieldName] = event.target.value;
+
+    setCv((prevState) => ({
+      ...prevState,
+      educationItems: items,
+    }));
+  };
+
+  const handleChangeExperience = (event, id) => {
+    let items = [...cv.experienceItems];
+    let queryItem = items.find((element) => element.id == id);
+    let inputFieldName = event.target.name;
+
+    queryItem.content[inputFieldName] = event.target.value;
+
+    setCv((prevState) => ({
+      ...prevState,
+      experienceItems: items,
+    }));
+  };
+
+  const handleChangePersonal = (event) => {
+    let inputFieldName = event.target.name;
+
+    setCv((prevState) => ({
+      ...prevState,
+      personalInformations: {
+        ...prevState.personalInformations,
+        [inputFieldName]: event.target.value,
+      },
+    }));
+  };
+  //handleChangePersonal(event) {
+  //  let item = { ...this.state.personalInformations };
+  //  let inputFieldName = event.target.name;
+  //  item[inputFieldName] = event.target.value;
+  //  this.setState({ personalInformations: item });
+  //}
+
+  const handleAddEducation = () => {
+    setCv((prevState) => ({
+      ...prevState,
       educationItems: [
+        ...prevState.educationItems,
         {
-          id: "",
+          id: uuidv4(),
           content: {
             universityName: "",
             city: "",
@@ -30,9 +162,16 @@ class Main extends Component {
           },
         },
       ],
+    }));
+  };
+
+  const handleAddExperience = () => {
+    setCv((prevState) => ({
+      ...prevState,
       experienceItems: [
+        ...prevState.experienceItems,
         {
-          id: "",
+          id: uuidv4(),
           content: {
             position: "",
             company: "",
@@ -42,217 +181,60 @@ class Main extends Component {
           },
         },
       ],
-    };
-  }
+    }));
+  };
 
-  handleChangeEducation(event, id) {
-    let items = [...this.state.educationItems];
-    let queryItem = items.find((element) => element.id == id);
-    let inputFieldName = event.target.name;
+  const handleRemoveEducation = (id) => {
+    let items = [...cv.educationItems];
+    let index = items.findIndex((element) => element.id == id);
+    items.splice(index, 1);
+    setCv((prevState) => ({
+      ...prevState,
+      educationItems: items,
+    }));
+  };
 
-    queryItem.content[inputFieldName] = event.target.value;
+  const handleRemoveExperience = (id) => {
+    let items = [...cv.experienceItems];
+    let index = items.findIndex((element) => element.id == id);
+    items.splice(index, 1);
+    setCv((prevState) => ({
+      ...prevState,
+      experienceItems: items,
+    }));
+  };
 
-    this.setState({ educationItems: items });
-  }
+  const handleLoadExample = () => {
+    setCv(exampleCV);
+  };
 
-  handleAddEducation() {
-    let items = [
-      ...this.state.educationItems,
-      {
-        id: uuidv4(),
-        content: {
-          universityName: "",
-          city: "",
-          degree: "",
-          subject: "",
-          from: "",
-          to: "",
-        },
-      },
-    ];
+  const handleReset = () => {
+    setCv(emptyCv);
+  };
 
-    this.setState({ educationItems: items });
-  }
-
-  handleDeleteEducation(id) {
-    let items = [...this.state.educationItems];
-    let filterdItems = items.filter((item) => {
-      return item.id != id;
-    });
-
-    this.setState({ educationItems: filterdItems });
-  }
-
-  handleChangeExperience(event, id) {
-    let items = [...this.state.experienceItems];
-    let queryItem = items.find((element) => element.id == id);
-    let inputFieldName = event.target.name;
-
-    queryItem.content[inputFieldName] = event.target.value;
-
-    this.setState({ experienceItems: items });
-  }
-
-  handleAddExperience() {
-    let items = [
-      ...this.state.experienceItems,
-      {
-        id: uuidv4(),
-        content: {
-          position: "",
-          company: "",
-          city: "",
-          from: "",
-          to: "",
-        },
-      },
-    ];
-
-    this.setState({ experienceItems: items });
-  }
-
-  handleDeleteExperience(id) {
-    let items = [...this.state.experienceItems];
-    let filterdItems = items.filter((item) => {
-      return item.id != id;
-    });
-
-    this.setState({ experienceItems: filterdItems });
-  }
-
-  handleChangePersonal(event) {
-    let item = { ...this.state.personalInformations };
-    let inputFieldName = event.target.name;
-
-    item[inputFieldName] = event.target.value;
-
-    this.setState({ personalInformations: item });
-  }
-
-  handleLoadExample() {
-    this.setState({
-      personalInformations: {
-        firstName: "Janis",
-        lastName: "Boucard",
-        title: "Data Scientist",
-        adress: "14 rue Grande Biesse, 44200 Nantes",
-        phoneNumber: "07 85 39 65 32",
-        email: "janis.boucard@gmail.com",
-        description: "I'm looking for a job!",
-      },
-      educationItems: [
-        {
-          id: "fakeId1",
-          content: {
-            universityName: "Arts et Métiers",
-            city: "Angers",
-            degree: "Industrial Engineering",
-            subject: "Idk",
-            from: "2019",
-            to: "2022",
-          },
-        },
-        {
-          id: "fakeId2",
-          content: {
-            universityName: "IAE Nantes",
-            city: "Nantes",
-            degree: "Management",
-            subject: "Idk",
-            from: "2022",
-            to: "2023",
-          },
-        },
-      ],
-      experienceItems: [
-        {
-          id: "fakeId3",
-          content: {
-            position: "Continuous Improvement Engineer",
-            company: "GF Palette",
-            city: "Carentoir",
-            from: "2019",
-            to: "2022",
-          },
-        },
-        {
-          id: "fakeId4",
-          content: {
-            position: "Data Scientist",
-            company: "AiHerd",
-            city: "Nantes",
-            from: "2022",
-            to: "2023",
-          },
-        },
-      ],
-    });
-  }
-
-  handleReset() {
-    this.setState({
-      personalInformations: {
-        firstName: "",
-        lastName: "",
-        title: "",
-        adress: "",
-        phoneNumber: "",
-        email: "",
-        description: "",
-      },
-      educationItems: [
-        {
-          id: "",
-          content: {
-            universityName: "",
-            city: "",
-            degree: "",
-            subject: "",
-            from: "",
-            to: "",
-          },
-        },
-      ],
-      experienceItems: [
-        {
-          id: "",
-          content: {
-            position: "",
-            company: "",
-            city: "",
-            from: "",
-            to: "",
-          },
-        },
-      ],
-    });
-  }
-
-  render() {
-    return (
-      <div className="main">
-        <CvForm
-          personalInformations={this.state.personalInformations}
-          experienceItems={this.state.experienceItems}
-          educationItems={this.state.educationItems}
-          onChangeExperience={this.handleChangeExperience.bind(this)}
-          onAddExperience={this.handleAddExperience.bind(this)}
-          onDeleteExperience={this.handleDeleteExperience.bind(this)}
-          onChangeEducation={this.handleChangeEducation.bind(this)}
-          onAddEducation={this.handleAddEducation.bind(this)}
-          onDeleteEducation={this.handleDeleteEducation.bind(this)}
-          onChangePersonal={this.handleChangePersonal.bind(this)}
-          onLoadExample={this.handleLoadExample.bind(this)}
-          onReset={this.handleReset.bind(this)}
-        />
-        <CvPreview
-          personalInformations={this.state.personalInformations}
-          experienceItems={this.state.experienceItems}
-          educationItems={this.state.educationItems}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="main">
+      <CvForm
+        personalInformations={cv.personalInformations}
+        experienceItems={cv.experienceItems}
+        educationItems={cv.educationItems}
+        onChangeExperience={handleChangeExperience}
+        onAddExperience={handleAddExperience}
+        onDeleteExperience={handleRemoveExperience}
+        onChangeEducation={handleChangeEducation}
+        onAddEducation={handleAddEducation}
+        onDeleteEducation={handleRemoveEducation}
+        onChangePersonal={handleChangePersonal}
+        onLoadExample={handleLoadExample}
+        onReset={handleReset}
+      />
+      <CvPreview
+        personalInformations={cv.personalInformations}
+        experienceItems={cv.experienceItems}
+        educationItems={cv.educationItems}
+      />
+    </div>
+  );
+};
 
 export default Main;

@@ -1,24 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
 import HeaderPreview from "./HeaderPreview";
 import MainSectionPreview from "./MainSectionPreview";
 
-class CvPreview extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="cv-preview">
-        <HeaderPreview personalInformations={this.props.personalInformations} />
-        <MainSectionPreview
-          personalInformations={this.props.personalInformations}
-          experienceItems={this.props.experienceItems}
-          educationItems={this.props.educationItems}
-        />
-      </div>
-    );
-  }
-}
+const CvPreview = ({
+  personalInformations,
+  experienceItems,
+  educationItems,
+}) => {
+  return (
+    <div className="cv-preview">
+      <HeaderPreview personalInformations={personalInformations} />
+      <MainSectionPreview
+        personalInformations={personalInformations}
+        experienceItems={experienceItems}
+        educationItems={educationItems}
+      />
+    </div>
+  );
+};
 
 export default CvPreview;
